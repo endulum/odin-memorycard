@@ -1,4 +1,78 @@
-button[disabled] img {
-  filter: grayscale(100%);
-  opacity: 0.5;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  min-width: 100%;
+  min-height: 100%;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: lightgray;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 30px 0;
+}
+
+main {
+  background-color: white;
+  padding: 1rem;
+  width: min-content;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+button{
+  padding: 10px;
+  &[disabled] img {
+    filter: grayscale(100%);
+    opacity: 0.5;
+  }
+}
+
+.pokemon {
+  display: grid;
+  gap: 10px;
+  width: min-content;
+  height: min-content;
+
+  & button {
+    width: 116px;
+    height: min-content;
+    
+    &:hover {
+      cursor: pointer;
+    }
+
+    &[disabled]:hover {
+      cursor: not-allowed;
+    }
+  }
+
+  &.grid-9 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  &.grid-16 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  &.grid-25 {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.buttons {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+
+  & button {
+    width: 100%;
+  }
 }

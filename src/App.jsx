@@ -80,25 +80,31 @@ export default function App() {
   }, [pokemon]);
 
   return (
-    <div>
-      {pokemon.map((mon) => (
-        <button
-          type="button"
-          key={mon.species}
-          title={mon.species}
-          onClick={() => clickPokemon(mon.species)}
-          disabled={!gameState}
-        >
-          <img
-            src={mon.img}
-            alt={mon.species}
-          />
-        </button>
-      ))}
-
-      <div>
-        {win && <p>You won! You got a perfect score.</p>}
-        {lose && (
+    <main>
+      <p>
+        <b>Pokemon Memory Card:</b>
+        {' '}
+        Try to click on all of the Pokemon, but don&apos;t click the same Pokemon more than once!
+      </p>
+      <div className={`pokemon grid-${pokemon.length}`}>
+        {pokemon.map((mon) => (
+          <button
+            type="button"
+            key={mon.species}
+            title={mon.species}
+            onClick={() => clickPokemon(mon.species)}
+            disabled={!gameState}
+          >
+            <img
+              src={mon.img}
+              alt={mon.species}
+            />
+            <span>{mon.species}</span>
+          </button>
+        ))}
+      </div>
+      {win && <p>You won! You got a perfect score.</p>}
+      {lose && (
         <p>
           You lost! You got
           {' '}
@@ -109,7 +115,8 @@ export default function App() {
           {pokemon.length}
           .
         </p>
-        )}
+      )}
+      <div className="buttons">
         {[9, 16, 25].map((amount) => (
           <button
             key={amount}
@@ -121,7 +128,7 @@ export default function App() {
               setLose(false);
             }}
           >
-            Reset (
+            New Board (
             {amount}
             x
             {amount}
@@ -130,6 +137,6 @@ export default function App() {
         ))}
 
       </div>
-    </div>
+    </main>
   );
 }
