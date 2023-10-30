@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import './style.css';
 
 export default function App() {
   const [pokemon, setPokemon] = useState([]);
@@ -8,6 +9,7 @@ export default function App() {
       const mon = {};
       mon.species = response.species.name;
       mon.img = response.sprites.front_default;
+      mon.clicked = false;
       return mon;
     });
   }
@@ -28,13 +30,33 @@ export default function App() {
     });
   }
 
+  function clickPokemon(species) {
+    setPokemon([...pokemon.map((mon) => {
+      if (mon.species === species) {
+        return { ...mon, clicked: true };
+      } return mon;
+    })]);
+  }
+
+  function isPokemonClicked(species) {
+    return pokemon.find((mon) => mon.species === species).clicked;
+  }
+
   useEffect(() => {
     setRandomPokemon(9);
   }, []);
 
   return (
     <div>
-      {pokemon.map((mon) => <img key={mon.species} src={mon.img} alt={mon.species} />)}
+      {pokemon.map((mon) => (
+        <img
+          key={mon.species}
+          src={mon.img}
+          alt={mon.species}
+          className={isPokemonClicked(mon.species) ? 'clicked' : ''}
+          onClick={() => clickPokemon(mon.species)}
+        />
+      ))}
     </div>
   );
 }
