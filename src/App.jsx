@@ -31,7 +31,6 @@ export default function App() {
   }
 
   function clickPokemon(species) {
-    shufflePokemon();
     setPokemon([...pokemon.map((mon) => {
       if (mon.species === species) {
         return { ...mon, clicked: true };
@@ -54,13 +53,18 @@ export default function App() {
   return (
     <div>
       {pokemon.map((mon) => (
-        <img
+        <button
+          type="button"
           key={mon.species}
-          src={mon.img}
-          alt={mon.species}
-          className={isPokemonClicked(mon.species) ? 'clicked' : ''}
-          onClick={() => clickPokemon(mon.species)}
-        />
+          title={mon.species}
+          onClick={() => { clickPokemon(mon.species); }}
+        >
+          <img
+            src={mon.img}
+            alt={mon.species}
+            className={isPokemonClicked(mon.species) ? 'clicked' : ''}
+          />
+        </button>
       ))}
     </div>
   );
