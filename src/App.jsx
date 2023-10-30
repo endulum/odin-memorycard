@@ -8,6 +8,7 @@ export default function App() {
   const [lose, setLose] = useState(false);
   const [canShuffle, setCanShuffle] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [highScore, setHighScore] = useState(0);
 
   function getPokemonById(id) {
     return fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then((response) => response.json()).then((response) => {
@@ -65,6 +66,13 @@ export default function App() {
     }, 0);
   }
 
+  function getHighScore() {
+    const score = checkScore();
+    if (score > highScore) {
+      setHighScore(score);
+    }
+  }
+
   function shufflePokemon() {
     setPokemon([...pokemon.sort(() => Math.random() - 0.5)]);
   }
@@ -83,12 +91,22 @@ export default function App() {
     }
   }, [pokemon]);
 
+  useEffect(() => {
+    getHighScore();
+  }, [win, lose]);
+
   return (
     <main>
       <p>
         <b>Pokemon Memory Card:</b>
         {' '}
         Try to click on all of the Pokemon, but don&apos;t click the same Pokemon more than once!
+      </p>
+      <p>
+        Your highest score was
+        {' '}
+        {highScore}
+        .
       </p>
       <div className={`pokemon grid-${pokemon.length}`}>
         {pokemon.map((mon) => (
