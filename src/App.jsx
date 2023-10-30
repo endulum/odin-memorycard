@@ -7,6 +7,7 @@ export default function App() {
   const [win, setWin] = useState(false);
   const [lose, setLose] = useState(false);
   const [canShuffle, setCanShuffle] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   function getPokemonById(id) {
     return fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then((response) => response.json()).then((response) => {
@@ -29,7 +30,10 @@ export default function App() {
     randomIds.forEach((id) => {
       getPokemonById(id).then((response) => {
         randomPokemon.push(response);
-        if (randomPokemon.length === max) setPokemon(randomPokemon);
+        if (randomPokemon.length === max) {
+          setPokemon(randomPokemon);
+          setLoading(false);
+        }
       });
     });
   }
@@ -93,7 +97,7 @@ export default function App() {
             key={mon.species}
             title={mon.species}
             onClick={() => clickPokemon(mon.species)}
-            disabled={!gameState}
+            disabled={!gameState || loading}
           >
             <img
               src={mon.img}
@@ -122,6 +126,7 @@ export default function App() {
             key={amount}
             type="button"
             onClick={() => {
+              setLoading(true);
               setRandomPokemon(amount);
               setGameState(true);
               setWin(false);
