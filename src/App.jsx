@@ -110,17 +110,25 @@ export default function App() {
           .
         </p>
         )}
-        <button
-          type="button"
-          onClick={() => {
-            setRandomPokemon(9);
-            setGameState(true);
-            setWin(false);
-            setLose(false);
-          }}
-        >
-          Reset
-        </button>
+        {[9, 16, 25].map((amount) => (
+          <button
+            key={amount}
+            type="button"
+            onClick={() => {
+              setRandomPokemon(amount);
+              setGameState(true);
+              setWin(false);
+              setLose(false);
+            }}
+          >
+            Reset (
+            {amount}
+            x
+            {amount}
+            )
+          </button>
+        ))}
+
       </div>
     </div>
   );
