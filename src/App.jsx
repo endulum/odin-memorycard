@@ -31,6 +31,7 @@ export default function App() {
   }
 
   function clickPokemon(species) {
+    shufflePokemon();
     setPokemon([...pokemon.map((mon) => {
       if (mon.species === species) {
         return { ...mon, clicked: true };
@@ -40,6 +41,10 @@ export default function App() {
 
   function isPokemonClicked(species) {
     return pokemon.find((mon) => mon.species === species).clicked;
+  }
+
+  function shufflePokemon() {
+    setPokemon([...pokemon.sort(() => Math.random() - 0.5)]);
   }
 
   useEffect(() => {
