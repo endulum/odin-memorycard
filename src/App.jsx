@@ -6,6 +6,7 @@ export default function App() {
   const [gameState, setGameState] = useState(true);
   const [win, setWin] = useState(false);
   const [lose, setLose] = useState(false);
+  const [canShuffle, setCanShuffle] = useState(false);
 
   function getPokemonById(id) {
     return fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then((response) => response.json()).then((response) => {
@@ -33,6 +34,10 @@ export default function App() {
     });
   }
 
+  function isPokemonClicked(species) {
+    return pokemon.find((mon) => mon.species === species).clicked;
+  }
+
   function clickPokemon(species) {
     if (gameState) {
       if (isPokemonClicked(species)) {
@@ -44,16 +49,9 @@ export default function App() {
             return { ...mon, clicked: true };
           } return mon;
         })]);
+        setCanShuffle(true);
       }
     }
-  }
-
-  function isPokemonClicked(species) {
-    return pokemon.find((mon) => mon.species === species).clicked;
-  }
-
-  function shufflePokemon() {
-    setPokemon([...pokemon.sort(() => Math.random() - 0.5)]);
   }
 
   function checkScore() {
@@ -61,6 +59,10 @@ export default function App() {
       if (curr.clicked) return acc + 1;
       return acc;
     }, 0);
+  }
+
+  function shufflePokemon() {
+    setPokemon([...pokemon.sort(() => Math.random() - 0.5)]);
   }
 
   useEffect(() => {
@@ -71,6 +73,9 @@ export default function App() {
     if (pokemon.length > 0 && checkScore() === pokemon.length) {
       setGameState(false);
       setWin(true);
+    } else if (canShuffle) {
+      shufflePokemon();
+      setCanShuffle(false);
     }
   }, [pokemon]);
 
@@ -81,10 +86,7 @@ export default function App() {
           type="button"
           key={mon.species}
           title={mon.species}
-          onClick={() => {
-            // shufflePokemon();
-            clickPokemon(mon.species);
-          }}
+          onClick={() => clickPokemon(mon.species)}
           disabled={!gameState}
         >
           <img
@@ -123,5 +125,3 @@ export default function App() {
     </div>
   );
 }
-
-// todo: fix shuffling
