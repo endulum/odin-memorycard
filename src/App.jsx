@@ -3,6 +3,9 @@ import './style.css';
 
 export default function App() {
   const [pokemon, setPokemon] = useState([]);
+  const [gameState, setGameState] = useState(true);
+  const [win, setWin] = useState(false);
+  const [lose, setLose] = useState(false);
 
   function getPokemonById(id) {
     return fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then((response) => response.json()).then((response) => {
@@ -31,11 +34,18 @@ export default function App() {
   }
 
   function clickPokemon(species) {
-    setPokemon([...pokemon.map((mon) => {
-      if (mon.species === species) {
-        return { ...mon, clicked: true };
-      } return mon;
-    })]);
+    if (gameState) {
+      if (isPokemonClicked(species)) {
+        setGameState(false);
+        setLose(true);
+      } else {
+        setPokemon([...pokemon.map((mon) => {
+          if (mon.species === species) {
+            return { ...mon, clicked: true };
+          } return mon;
+        })]);
+      }
+    }
   }
 
   function isPokemonClicked(species) {
@@ -46,9 +56,23 @@ export default function App() {
     setPokemon([...pokemon.sort(() => Math.random() - 0.5)]);
   }
 
+  function checkScore() {
+    return pokemon.reduce((acc, curr) => {
+      if (curr.clicked) return acc + 1;
+      return acc;
+    }, 0);
+  }
+
   useEffect(() => {
     setRandomPokemon(9);
   }, []);
+
+  useEffect(() => {
+    if (pokemon.length > 0 && checkScore() === pokemon.length) {
+      setGameState(false);
+      setWin(true);
+    }
+  }, [pokemon]);
 
   return (
     <div>
@@ -57,15 +81,47 @@ export default function App() {
           type="button"
           key={mon.species}
           title={mon.species}
-          onClick={() => { clickPokemon(mon.species); }}
+          onClick={() => {
+            // shufflePokemon();
+            clickPokemon(mon.species);
+          }}
+          disabled={!gameState}
         >
           <img
             src={mon.img}
             alt={mon.species}
-            className={isPokemonClicked(mon.species) ? 'clicked' : ''}
           />
         </button>
       ))}
+
+      <div>
+        {win && <p>You won! You got a perfect score.</p>}
+        {lose && (
+        <p>
+          You lost! You got
+          {' '}
+          {checkScore()}
+          {' '}
+          out of
+          {' '}
+          {pokemon.length}
+          .
+        </p>
+        )}
+        <button
+          type="button"
+          onClick={() => {
+            setRandomPokemon(9);
+            setGameState(true);
+            setWin(false);
+            setLose(false);
+          }}
+        >
+          Reset
+        </button>
+      </div>
     </div>
   );
 }
+
+// todo: fix shuffling
